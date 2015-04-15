@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Random = System.Random;
 
 namespace Helpers
@@ -139,6 +140,11 @@ namespace Helpers
                 if (Check(Arr[i]))
                     return i;
             return -1;
+        }
+
+        public static IEnumerable<Tuple<T1, T2>>  Zip<T1, T2>(this IEnumerable<T1> A, IEnumerable<T2> B)
+        {
+            return A.Zip(B, (a, b) => new Tuple<T1, T2>(a, b));
         }
     }
 }
