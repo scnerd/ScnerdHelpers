@@ -42,5 +42,10 @@ namespace Helpers
         {
             return string.Format(Base, Params);
         }
+
+        public static string Repeat(this string Base, int Repetitions)
+        {
+            return string.Concat(Enumerable.Repeat(Base, Repetitions));
+        }
     }
 }
