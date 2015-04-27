@@ -35,7 +35,7 @@ namespace Helpers
         }
 
         /// <summary>
-        /// Calls a function a given number of times over a time period, passing the 
+        /// Calls a function a given number of times over a time period, passing values 0...1 as time progresses
         /// </summary>
         /// <param name="Duration">The duration in milliseconds over which to ramp the value</param>
         /// <param name="Steps">The number of times in that duration to call the specified function</param>
