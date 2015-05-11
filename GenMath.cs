@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Drawing;
+using System.Threading;
 
 namespace Helpers
 {
@@ -81,6 +83,56 @@ namespace Helpers
             public bool Equals(PointD other)
             {
                 return this.Equals((PointBase<double>)other);
+            }
+        }
+
+        public class RollingAverage
+        {
+            private double[] Vals;
+            private int Cur, Count;
+
+            public RollingAverage(int Size = 30)
+            {
+                Vals = new double[Size];
+                Cur = 0;
+                Count = 0;
+            }
+
+            public RollingAverage(int Size, double InitialValue, int InitialCount)
+            {
+                Vals = new double[Size];
+                for (Cur = 0; Cur < Math.Min(InitialCount, Size); Cur++)
+                {
+                    this[Cur] = InitialValue;
+                }
+                Count = InitialCount;
+            }
+
+            public void Push(params double[] Vals)
+            {
+                foreach (var v in Vals)
+                {
+                    this[Cur++] = v;
+                    Count++;
+                }
+            }
+
+            public static implicit operator double(RollingAverage rv)
+            {
+                return ((double[]) rv).Average();
+            }
+
+            public static implicit operator double[](RollingAverage rv)
+            {
+                if (rv.Count < rv.Vals.Length)
+                    return rv.Vals.Take(rv.Count).ToArray();
+                return rv.Vals;
+            }
+
+            private double this[int index]
+            {
+                get { return this.Vals[index%Vals.Length]; }
+                set { this.Vals[index%Vals.Length] = value; }
             }
         }
 
