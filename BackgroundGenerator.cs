@@ -4,12 +4,21 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Helpers
 {
+    public static class BackgroundGeneratorExts
+    {
+        public static BackgroundGenerator<T> AsBackgroundGenerator<T>(this IEnumerable<T> Base, int MaxCache = -1)
+        {
+            return BackgroundGenerator<T>.FromEnumerator(Base.GetEnumerator(), MaxCache);
+        }
+    }
+
     public class BackgroundGenerator<T> : Task, IEnumerator<T>
     {
         bool IsPopped = false;
@@ -37,6 +46,11 @@ namespace Helpers
         {
             return new BackgroundGenerator<T>(Precomputed);
         }
+
+        public static BackgroundGenerator<T> ForEach<A>(IEnumerable<A> Data, Func<A, T> Body, int MaxCache = -1, bool AutoStart = true)
+        {
+            return BackgroundGenerator<T>.FromEnumerator(Data.Select(Body).GetEnumerator(), MaxCache, AutoStart);
+        } 
 
         public static BackgroundGenerator<T> FromEnumerator(IEnumerator<T> Generator, int MaxCache = -1,
             bool AutoStart = true)
@@ -108,7 +122,7 @@ namespace Helpers
                     throw new OperationCanceledException("End of background generator reached");
                 }
             }, MaxCache, AutoStart);
-        } 
+        }
 
         public static BackgroundGenerator<T> FromFuncWithCarryover<R>(Func<R, Tuple<T, R>> CarryoverGenerateNext, int MaxCache = -1, bool AutoStart = true)
         {

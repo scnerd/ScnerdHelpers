@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundEnumerable.cs" />
     <Compile Include="BackgroundGenerator.cs" />
     <Compile Include="BitmapHelpers.cs" />
     <Compile Include="Bits.cs" />

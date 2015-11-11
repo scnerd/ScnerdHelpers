@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -47,6 +48,18 @@ namespace Helpers
         public static string Repeat(this string Base, int Repetitions)
         {
             return string.Concat(Enumerable.Repeat(Base, Repetitions));
+        }
+
+        public static string[] Partition(this string Base, char Splitter)
+        {
+            var i = Base.IndexOf(Splitter);
+            return new[] {Base.Slice(0, i), Base.Slice(i + 1, Base.Length)};
+        }
+
+        public static string[] RPartition(this string Base, char Splitter)
+        {
+            var i = Base.LastIndexOf(Splitter);
+            return new[] { Base.Slice(0, i), Base.Slice(i + 1, Base.Length) };
         }
     }
 }
